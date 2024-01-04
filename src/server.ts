@@ -1,9 +1,11 @@
 import Express from 'express';
+import cors from 'cors';
 import UsuarioController from './controllers/UsuarioController';
 import ProdutoController from './controllers/ProdutoController';
 
 const app = Express();
 app.use(Express.json());
+app.use(cors());
 const PORT = 3000;
 
 app.get('/', (req,res) => {
@@ -11,7 +13,7 @@ app.get('/', (req,res) => {
 });
 
 app.get('/listarUsuarios', UsuarioController.listarUsuarios);
-app.post('/cadastarUsuario', UsuarioController.cadastrarUsuario);
+app.post('/cadastrarUsuario', UsuarioController.cadastrarUsuario);
 app.get('/buscarUsuarioPorId/:id', UsuarioController.buscarUsuarioPorId);
 app.put('/editarUsuario/:id', UsuarioController.editarUsuario);
 app.delete('/deletarUsuario/:id', UsuarioController.deletarUsuario);
