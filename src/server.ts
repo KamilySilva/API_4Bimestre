@@ -1,5 +1,5 @@
 import Express from 'express';
-import UserController from './controllers/UserController';
+import UsuarioController from './controllers/UsuarioController';
 import ProdutoController from './controllers/ProdutoController';
 
 const app = Express();
@@ -10,8 +10,11 @@ app.get('/', (req,res) => {
     return res.send({message: 'Hello Word'});
 });
 
-app.get('/listUsers', UserController.listUsers);
-app.post('/createUser', UserController.createUser);
+app.get('/listarUsuarios', UsuarioController.listarUsuarios);
+app.post('/cadastarUsuario', UsuarioController.cadastrarUsuario);
+app.get('/buscarUsuarioPorId/:id', UsuarioController.buscarUsuarioPorId);
+app.put('/editarUsuario/:id', UsuarioController.editarUsuario);
+app.delete('/deletarUsuario/:id', UsuarioController.deletarUsuario);
 
 app.get('/listarProdutos', ProdutoController.listarProdutos);
 app.post('/cadastrarProduto', ProdutoController.cadastarProduto);
