@@ -5,8 +5,8 @@ class EditarProdutoService{
         private ProdutoRepository: IProdutoRepository
     ){}
 
-    public async execute(id: number, nome: string, preco: string, categoria: string){
-        const produto = await this.ProdutoRepository.update(id, nome, preco, categoria);
+    public async execute(id: number, nome: string, preco: string, categoria: string, quantidade: string){
+        const produto = await this.ProdutoRepository.update(id, nome, preco, categoria, quantidade);
         return produto;
     }
 }

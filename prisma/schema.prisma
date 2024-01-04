@@ -23,7 +23,7 @@ model Produtos {
     nome String
     preco String
     categoria String
-    quantidade Int
+    quantidade String
 
     @@map("produtos")
 }

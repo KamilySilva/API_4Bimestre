@@ -21,11 +21,11 @@ export default {
         }
     },
 
-    async cadastarProduto(req: Request, res: Response){
+    async cadastrarProduto(req: Request, res: Response){
         try{
-            const {nome, preco, categoria} = req.body;
-            const cadastarProduto = new CadastrarProdutoService(new ProdutoRepository());
-            const produto = await cadastarProduto.execute(nome, preco, categoria);
+            const {nome, preco, categoria, quantidade} = req.body;
+            const cadastrarProduto = new CadastrarProdutoService(new ProdutoRepository());
+            const produto = await cadastrarProduto.execute(nome, preco, categoria, quantidade);
 
             return res.json({
                 error: false,
@@ -92,7 +92,7 @@ export default {
     async editarProduto(req: Request, res: Response){
         try{
             const {id} = req.params;
-            const {nome, preco, categoria} = req.body;
+            const {nome, preco, categoria, quantidade} = req.body;
 
             const numericId = Number(id);
 
@@ -107,7 +107,7 @@ export default {
             }
 
             const editarProduto = new EditarProdutoService(new ProdutoRepository());
-            const produto = await editarProduto.execute(numericId, nome, preco, categoria);
+            const produto = await editarProduto.execute(numericId, nome, preco, categoria, quantidade);
 
             return res.json({
                 error: false,

@@ -5,8 +5,8 @@ class CadastrarProdutoService{
         private ProdutoRepository: IProdutoRepository
     ){}
 
-    public async execute(nome: string, preco: string, categoria: string){
-        const produto = await this.ProdutoRepository.create(nome, preco, categoria);
+    public async execute(nome: string, preco: string, categoria: string, quantidade: string){
+        const produto = await this.ProdutoRepository.create(nome, preco, categoria, quantidade);
         return produto;
     }
 }

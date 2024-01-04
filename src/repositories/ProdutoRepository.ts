@@ -29,18 +29,19 @@ class ProdutoRepository implements IProdutoRepository{
         return produto;
     }
 
-    public async create(nome: string, preco: string, categoria: string): Promise<Produtos> {
+    public async create(nome: string, preco: string, categoria: string, quantidade: string): Promise<Produtos> {
         const produto = await prisma.produtos.create({
             data: {
                 nome,
                 preco,
-                categoria
+                categoria,
+                quantidade
             }
         });
         return produto;
     }
 
-    public async update(numericId: number, nome: string, preco: string, categoria: string): Promise<Produtos> {
+    public async update(numericId: number, nome: string, preco: string, categoria: string, quantidade: string): Promise<Produtos> {
         const produto = await prisma.produtos.update({
             where: {
                 id: numericId
@@ -48,7 +49,8 @@ class ProdutoRepository implements IProdutoRepository{
             data: {
                 nome,
                 preco,
-                categoria
+                categoria,
+                quantidade
             }
         });
         return produto;
