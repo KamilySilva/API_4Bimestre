@@ -1,28 +1,31 @@
 import { Request, Response } from 'express';
-import { prisma } from '../database';
+import { CadastrarProdutoService } from '../services/ProdutoServices/CadastrarProdutoService';
+import { ProdutoRepository } from '../repositories/ProdutoRepository';
+import { EditarProdutoService } from '../services/ProdutoServices/EditarProdutoService';
+import { DeletarProdutoService } from '../services/ProdutoServices/DeletarProdutoService';
+import { ListarProdutosService } from '../services/ProdutoServices/ListarProdutosService';
+import { BuscarProdutoPorIdService } from '../services/ProdutoServices/BuscarProdutoPorIdService';
+import { BuscarProdutoPorNomeService } from '../services/ProdutoServices/BuscarProdutoPorNomeService';
 
 export default {
 
     async listarProdutos(req: Request, res: Response){
         try {
-            const produtos = await prisma.produtos.findMany();
+            const listarProdutos = new ListarProdutosService(new ProdutoRepository());
+            const produtos = await listarProdutos.execute();
+
             return res.json(produtos);
+
         } catch (error) {
             return res.status(500).json({ message: error.message });
         }
     },
-    
+
     async cadastarProduto(req: Request, res: Response){
         try{
             const {nome, preco, categoria} = req.body;
-
-            const produto = await prisma.produtos.create({
-                data: {
-                    nome,
-                    preco,
-                    categoria
-                }
-            });
+            const cadastarProduto = new CadastrarProdutoService(new ProdutoRepository());
+            const produto = await cadastarProduto.execute(nome, preco, categoria);
 
             return res.json({
                 error: false,
@@ -35,11 +38,14 @@ export default {
         }
     },
 
-    async buscarProduto(req: Request, res: Response){
+    async buscarProdutoPorId(req: Request, res: Response){
         try{
             const {id} = req.params;
 
-            const produto = await prisma.produtos.findUnique({ where: {id: Number(id)} });
+            const numericId = Number(id);
+
+            const buscarProdutoPorId = new BuscarProdutoPorIdService(new ProdutoRepository());
+            const produto = await buscarProdutoPorId.execute(numericId);
 
             if(!produto){
                 return res.json({
@@ -58,12 +64,40 @@ export default {
         }
     },
 
+    async buscarProdutoPorNome(req: Request, res: Response) {
+        try {
+            const { nome } = req.params;
+
+            const buscarProdutoPorNome = new BuscarProdutoPorNomeService(new ProdutoRepository());
+            const produtos = await buscarProdutoPorNome.execute(nome);
+
+
+            if (!produtos.length) {
+                return res.json({
+                    error: true,
+                    message: 'Error: Nenhum produto encontrado com esse nome.',
+                });
+            }
+
+            return res.json({
+                error: false,
+                produtos
+            });
+
+        } catch (error) {
+            return res.json({ message: error.message });
+        }
+    },
+
     async editarProduto(req: Request, res: Response){
         try{
             const {id} = req.params;
             const {nome, preco, categoria} = req.body;
 
-            const produtoExist = await prisma.produtos.findUnique({ where: {id: Number(id)} });
+            const numericId = Number(id);
+
+            const buscarProdutoPorId = new BuscarProdutoPorIdService(new ProdutoRepository());
+            const produtoExist = await buscarProdutoPorId.execute(numericId);
 
             if(!produtoExist){
                 return res.json({
@@ -72,16 +106,8 @@ export default {
                 });
             }
 
-            const produto = await prisma.produtos.update({
-                where: {
-                    id: Number(req.params.id)
-                },
-                data: {
-                    nome,
-                    preco,
-                    categoria
-                }
-            });
+            const editarProduto = new EditarProdutoService(new ProdutoRepository());
+            const produto = await editarProduto.execute(numericId, nome, preco, categoria);
 
             return res.json({
                 error: false,
@@ -98,7 +124,10 @@ export default {
         try{
             const {id} = req.params;
 
-            const produtoExist = await prisma.produtos.findUnique({ where: {id: Number(id)} });
+            const numericId = Number(id);
+
+            const buscarProdutoPorId = new BuscarProdutoPorIdService(new ProdutoRepository());
+            const produtoExist = await buscarProdutoPorId.execute(numericId);
 
             if(!produtoExist){
                 return res.json({
@@ -107,11 +136,8 @@ export default {
                 });
             }
 
-            const produto = await prisma.produtos.delete({
-                where: {
-                    id: Number(req.params.id)
-                }
-            });
+            const deletarProduto = new DeletarProdutoService(new ProdutoRepository());
+            const produto = await deletarProduto.execute(numericId);
 
             return res.json({
                 error: false,

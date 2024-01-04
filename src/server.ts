@@ -15,7 +15,8 @@ app.post('/createUser', UserController.createUser);
 
 app.get('/listarProdutos', ProdutoController.listarProdutos);
 app.post('/cadastrarProduto', ProdutoController.cadastarProduto);
-app.get('/buscarProduto/:id', ProdutoController.buscarProduto);
+app.get('/buscarProdutoPorId/:id', ProdutoController.buscarProdutoPorId);
+app.get('/buscarProdutoPorNome/:nome', ProdutoController.buscarProdutoPorNome);
 app.put('/editarProduto/:id', ProdutoController.editarProduto);
 app.delete('/deletarProduto/:id', ProdutoController.deletarProduto);
 
