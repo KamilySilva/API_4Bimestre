@@ -3,9 +3,9 @@ import { BuscarUsuarioPorIdService } from '../services/UsuarioServices/BuscarUsu
 import { UsuarioRepository } from '../repositories/UsuarioRepository';
 import { ListarUsuariosService } from '../services/UsuarioServices/ListarUsuariosService';
 import { DeletarUsuarioService } from '../services/UsuarioServices/DeletarUsuarioService';
-import { EditarUsuarioService } from '../services/UsuarioServices/EditarUsuarioService';
 import { CadastrarUsuarioService } from '../services/UsuarioServices/CadastrarUsuarioService';
 import { BuscarUsuarioPorEmailService } from '../services/UsuarioServices/BuscarUsuarioPorEmailService';
+import bcrypt from 'bcrypt';
 
 export default {
 
@@ -35,8 +35,10 @@ export default {
                 });
             }
 
+            const hashPassword = await bcrypt.hash(password, 10);
+
             const cadastrarUsuario = new CadastrarUsuarioService(new UsuarioRepository());
-            const usuario = await cadastrarUsuario.execute(email, password);
+            const usuario = await cadastrarUsuario.execute(email, hashPassword);
 
             return res.json({
                 error: false,
@@ -67,37 +69,6 @@ export default {
 
             return res.json({
                 error: false,
-                usuario
-            });
-
-        }catch(error){
-            return res.json({message: error.message});
-        }
-    },
-
-    async editarUsuario(req: Request, res: Response){
-        try{
-            const {id} = req.params;
-            const {email, password} = req.body;
-
-            const numericId = Number(id);
-
-            const buscarUsuarioPorId = new BuscarUsuarioPorIdService(new UsuarioRepository());
-            const usuarioExist = await buscarUsuarioPorId.execute(numericId);
-
-            if(!usuarioExist){
-                return res.json({
-                    error: true,
-                    message: 'Error: Usuário não encontrado!',
-                });
-            }
-
-            const editarUsuario = new EditarUsuarioService(new UsuarioRepository());
-            const usuario = await editarUsuario.execute(numericId, email, password);
-
-            return res.json({
-                error: false,
-                message: 'Sucesso: Usuário atualizado com sucesso!',
                 usuario
             });
 

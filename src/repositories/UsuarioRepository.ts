@@ -26,24 +26,11 @@ class UsuarioRepository implements IUsuarioRepository {
         return usuario;
     }
 
-    public async create(email: string, password: string): Promise<User> {
+    public async create(email: string, hashPassword: string): Promise<User> {
         const usuario = await prisma.user.create({
             data: {
                 email,
-                password
-            }
-        });
-        return usuario;
-    }
-
-    public async update(numericId: number, email: string, password: string): Promise<User> {
-        const usuario = await prisma.user.update({
-            where: {
-                id: numericId
-            },
-            data: {
-                email,
-                password
+                password: hashPassword
             }
         });
         return usuario;
